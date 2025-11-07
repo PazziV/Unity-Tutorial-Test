@@ -4,4 +4,5 @@ using UnityEngine;
 public class PlayerData : ScriptableObject
 {
     public Vector3 lookPoint;
+    public Vector3 playerPosition;
 }

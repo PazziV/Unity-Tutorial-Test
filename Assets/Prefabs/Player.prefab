@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   speed: 10
+  data: {fileID: 11400000, guid: 77dbc88da51394c49a75294a4b5db1a5, type: 2}
 --- !u!1 &1811258399424175575
 GameObject:
   m_ObjectHideFlags: 0

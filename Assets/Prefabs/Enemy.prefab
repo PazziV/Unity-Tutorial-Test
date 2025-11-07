@@ -46,8 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41550e8cfa145974a887b4210eb3a411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBehaviour
-  Player: {fileID: 0}
-  Speed: 5
+  playerData: {fileID: 11400000, guid: 77dbc88da51394c49a75294a4b5db1a5, type: 2}
+  BasicSpeed: 8
 --- !u!65 &217715602350253278
 BoxCollider:
   m_ObjectHideFlags: 0
