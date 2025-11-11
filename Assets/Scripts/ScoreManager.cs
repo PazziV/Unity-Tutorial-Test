@@ -10,6 +10,7 @@ public class ScoreManager : MonoBehaviour
     private void Start()
     {
         highScoreText.text = data.highScore.ToString();
+        data.score = 0;
     }
 
     private void Update()
