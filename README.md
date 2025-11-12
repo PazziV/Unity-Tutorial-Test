@@ -559,38 +559,48 @@ Don't forget to add the component to the script and this should be it. We are no
 
 So to make it more like a game we need to have a GameOver screen and make the enemy spawn infinity.    
 Let's begin with the enemy spawning.  
+
+## The Game Scene
+I am going to make a new scene, the Game Scene. In here we put our important stuff first, a Floor, GameUI and our Player.    
+
 ### Enemy Spawning
-> I am going to make a new scene, the Game Scene. In here we put our important stuff first, a Floor, GameUI and our Player.<br><br>
-> We will now make a big box and call it the arena, you can make it invinsible (by deactivating the Mesh Renderer) because we will just teleport our Player if he goes outside the box.<br><br>
-> to do so we will also check the "Is Trigger" on in the Box Collider.<br><br>
-> Let's focus first on the Enemy and then make the Player trapped in this box. <br><br>
-> We will need a new Script, call it EnemySpawning and give it the arena.<br>
+We will now make a big box and call it the arena, you can make it invisible (by deactivating the Mesh Renderer) because we will just teleport our Player if he goes outside the box.  
+
+To do so we will also check the "Is Trigger" on in the Box Collider.    
+Let's focus first on the Enemy and then make the Player trapped in this box.  
+
+We will need a new Script, call it EnemySpawning and give it the arena.  
 ```C#
 [SerializeField] GameObject Enemy;
-    [SerializeField] float cooldown;
-    float remainingTime;
-    float randomX,randomZ;
-    Vector3 randomPosition;
+[SerializeField] float cooldown;
 
-    private void Update()
+float remainingTime;
+float randomX,randomZ;
+
+Vector3 randomPosition;
+
+private void Update()
+{
+    if (remainingTime <= 0)
     {
-        if (remainingTime <= 0)
-        {
-            randomX = Random.Range(-transform.localScale.x/2, transform.localScale.x/2);
-            randomZ = Random.Range(-transform.localScale.z/2, transform.localScale.z/2);
-            randomPosition = new Vector3(randomX,0,randomZ);
-            Instantiate(Enemy, randomPosition, Quaternion.identity);
-            remainingTime = cooldown;
+        randomX = Random.Range(-transform.localScale.x/2, transform.localScale.x/2);
+        randomZ = Random.Range(-transform.localScale.z/2, transform.localScale.z/2);
+        randomPosition = new Vector3(randomX,0,randomZ);
+        
+        Instantiate(Enemy, randomPosition, Quaternion.identity);
 
-        }
-        remainingTime -= Time.deltaTime;
+        remainingTime = cooldown;
     }
+    remainingTime -= Time.deltaTime;
+}
 ```
-> We'll need the scale of the box and to find it that out we can either use lossyScale or localScale. I chose localScale because it shouldn't matter since the scale isn't being manipulated by another object (like a parent). <br><br>
-> Also we need half of the scale because we are at Position 0/0 and if we have a scale of 50 that means we are between -25 and 25.<br><br>
-> **Nice Time to Commit 👁️👁️**<br>
+We'll need the scale of the box and to find it that out we can either use lossyScale or localScale. I chose localScale because it shouldn't matter since the scale isn't being manipulated by another object (like a parent).     
+Also we need half of the scale because we are at Position 0/0 and if we have a scale of 50 that means we are between -25 and 25.  
+
+**Nice Time to Commit 👁️👁️**  
+
 ### Keeping the Player inside
-> To keep the player inside we need a new Script for the Arena, I called it "KeepingPlayerInBound".<br>
+To keep the player inside we need a new Script for the Arena, I called it `KeepingPlayerInBound`.  
 ```C#
 Vector3 newPosition;
 
@@ -622,17 +632,25 @@ Vector3 newPosition;
         player.position = newPosition;
     }
 ```
-> It would been a short code but I wanted to show some examples.<br>
-> the first one is the typical example if you are tired or new, just a lot of ifs. It works, it just doesn't look great.<br><br>
-> the second one is much better, it is just two rows of code. Buuut it only works because we have a mirroring position value thanks to the arena being in the coordination (0,0,0). If it wouldn't be the case, this wouldn't work that great.<br><br>
-> So the best case would be to do a wrapper. The Mathf.Repeat is just like modulo but you can't go negativ and it just from 0 to our max scale and being negativ means we start from the highest number.<br><br>
-> Now the only thing left is to make a Game Over screen. Normally this would be a great time to commit, but I will quickly just do it.<br><br>
-### The Game Over Screen
-> Create a new Scene and put a new UI there.<br>
-> Create Panels, Text and most important a button. <br>
-> I will show our score and our highscore and also make a new script called GameOverScript.<br>
-> You can copy most of ScoreManager since it's pretty much the same, just without the player and overwriting anything.<br>
-> First of in the **ScoreManager** we need to add something, our new scene:
+It would been a short code but I wanted to show some examples.  
+
+The first one is the typical example if you are tired or new, just a lot of ifs. It works, it just doesn't look great.    
+
+The second one is much better, it is just two rows of code. Buuut it only works because we have a mirroring position value thanks to the arena being in the coordination (0,0,0). If it wouldn't be the case, this wouldn't work that great.    
+
+So the best case would be to do a wrapper. The `Mathf.Repeat()` is just like modulo but you can't go negative and it just from 0 to our max scale and being negative means we start from the highest number.    
+
+Now the only thing left is to make a Game Over screen. Normally this would be a great time to commit, but I will quickly just do it.    
+
+## The Game Over Screen
+- Create a new Scene and put a new UI there.  
+- Create Panels, Text and most important a button.   
+
+I will show our score and our highscore and also make a new script called `GameOverScript`.  
+ 
+You can copy most of `ScoreManager` since it's pretty much the same, just without the player and overwriting anything.  
+
+First of in the `ScoreManager` we need to add something, our new scene:
 ```C#
 private void Update()
     {
@@ -645,7 +663,7 @@ private void Update()
         SceneManager.LoadScene("GameOver"); //<--- Add this
     }
 ```
-> next up the GameOver Script looks like this:
+Next up the GameOver Script looks like this:
 ```C#
     [SerializeField] PlayerData data;
     [SerializeField] TextMeshProUGUI scoreText;
@@ -662,5 +680,6 @@ private void Update()
         SceneManager.LoadScene("Game");
     }
 ```
-> Now the only thing we need to do is, to give it to our Canvas and connect the thing. And then go to our Button and there is plus below OnClick, we press this, give it our Script and now it will fire the Methode when we click the button.<br><br>
-> To make it work we still need to do one final thing. We need to define our Scenes. If you go to File->Build Profiles you'll find many cool things, but we want to open the Scene List. Now open one Scene after the other and add them inside. After that, it should work (as long as you have the same name as in the code).<br>
+Now the only thing we need to do is, to give it to our Canvas and connect the thing. And then go to our Button and there is plus below OnClick, we press this, give it our Script and now it will fire the Methode when we click the button.    
+
+To make it work we still need to do one final thing. We need to define our Scenes. If you go to File->Build Profiles you'll find many cool things, but we want to open the Scene List. Now open one Scene after the other and add them inside. After that, it should work (as long as you have the same name as in the code).  
