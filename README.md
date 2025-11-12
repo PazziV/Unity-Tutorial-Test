@@ -140,13 +140,17 @@ private void Update()
 **Nice Time to Commit 👁️👁️**  
 
 ## Making our first Enemy
-> Since we are charting new territory we will make a new Branch <br>
-> And to make it GameJam-realisitc we are gonna cosplay another programmer who worked at the enemy at the same time our Player programmer and branch from main. <br> <br>
-> Same with the Player, make a new Test Scene, make a prefab, give him some funny texture and so on.<br>
-> **Nice Time to Commit 👁️👁️**<br>
-> Next up, how about making the Enemy move Towards a specific position that we could later on replace with the Player position.<br>
->So once again, make a Folder for Scripts -> Enemy and make a new MonoBehaviour.<br>
-> Alright the Code looks like this:
+Since we are charting new territory we will make a new Branch  
+
+And to make it GameJam-realisitc we are gonna cosplay another programmer who worked at the enemy at the same time our Player programmer and branch from main.  
+Same with the Player, make a new Test Scene, make a prefab, give him some funny texture and so on.  
+
+**Nice Time to Commit 👁️👁️**
+
+Next up, how about making the Enemy move Towards a specific position that we could later on replace with the Player position.  
+So once again, make a Folder for Scripts -> Enemy and make a new `MonoBehaviour`.  
+
+Alright the Code looks like this:
 ```C#
     [SerializeField] Vector3 PlayerPosition;
     [SerializeField] float Speed;
@@ -160,8 +164,8 @@ private void Update()
         
     }
 ```
-> To make it more interesting how about we make the position random every 2 seconds.<br>
-> This will be our first time we try to make a Cooldown and we have two ways for it:
+To make it more interesting how about we make the position random every 2 seconds.  
+This will be our first time we try to make a cooldown and we have two ways of going about it:
 ```C#
     //[SerializeField] Vector3 PlayerPosition;
     [SerializeField] float Speed;
@@ -226,13 +230,19 @@ private void Update()
         cooldownTimer += Time.deltaTime;
     }
 ```
-> Which Cooldown you should use is more of a situation thing (with Time.deltaTime you can show it better since you have a counter that you can display through UI). <br> In the end both do the job. <br> <br>
-> Alright we can move towards a position, now we should also look for collision, but before that: <br>
-> **Nice Time to Commit 👁️👁️**<br>
-> To simulate the Player, I will make a Pillar and give him a Rigidbody.<br>
-> What we also need is the Tag. Give the Placeholder Player a player tag.<br>
-> You can choose the pre-existing "Player" tag or create a new one. <br>
-> Now in our Script we have to clean a bit up since we don't need the cooldown anymore.
+Which Cooldown you should use is more of a situation thing (with Time.deltaTime you can show it better since you have a counter that you can display through UI).  
+In the end both do the job.
+
+Alright we can move towards a position, now we should also look for collision, but before that:
+
+**Nice Time to Commit 👁️👁️** 
+
+
+To simulate the Player, I will make a Pillar and give him a Rigidbody.  
+What we also need is the Tag. Give the Placeholder Player a player tag.  
+You can choose the pre-existing "Player" tag or create a new one.   
+
+Now in our Script we have to clean a bit up since we don't need the cooldown anymore.
 ```C#
 [SerializeField] GameObject Player;
 [SerializeField] float Speed;
@@ -249,8 +259,10 @@ private void Update()
         }
     }
 ```
-> We now add a GameObject to our script that will be our Player for now.<br>
-> Next up we will add this to our Script:
+
+We now add a GameObject to our script that will be our Player for now.  
+Next up we will add this to our Script:
+
 ```C#
     private void OnCollisionEnter(Collision collision)
     {
@@ -258,14 +270,21 @@ private void Update()
         Destroy(gameObject);
     }
 ```
-> We check if the collision is from a Player because maybe we hit the wall, or another Enemy or who knows what. So to be sure we check if the thing we are touching really is the Player. After that we Destroy ourself for now because that's what the Enemy should do if he touches him.<br> <br>
-> Oh no we aren't deleting anything, in Fact we aren't colliding with anything. Well we just make a quick Fix by copy the collider component and put it into the Base GameObject. Is it good, not really, but it's the GameJam experience! <br> <br>
-> **Nice Time to Commit 👁️👁️**<br>
-> How about we combine the two branches of the Player and the Enemy and look how those two interact with each other.<br>
-> If we want that the Enemies still chases after the Player and get destroyed when they touched them, we need to do some things. One thing would be to appoint every enemy the Player object. The other thing is to change the tag where the Collider is on the Player. <br><br>
-> Now this should work, but we have to give every enemy the PlayerObject and that is pretty bad, so let's change that.<br>
-> We just need the Position of the Player, so we will just save the Position from the Player in his Scriptable Object and let the Enemy read it. (Also we could maybe make the Speed of the enemy a bit more random to make it more interesting) <br> <br>
-> Add in the PlayerData the Player Position:
+
+We check if the collision is from a Player because maybe we hit the wall, or another Enemy or who knows what. So to be sure we check if the thing we are touching really is the Player. After that we Destroy ourself for now because that's what the Enemy should do if he touches him.  
+Oh no! We aren't deleting anything, in fact we aren't even colliding with anything. Well we'll just make a quick fix by copying the collider component and putting it into the base GameObject.  
+
+Is it good? Not really, but it's the GameJam experience!      
+
+**Nice Time to Commit 👁️👁️**  
+
+How about we combine the two branches of the Player and the Enemy and look how those two interact with each other.  
+If we want the Enemies to still chase after the Player and get destroyed when they touch them, we need to do some things. One thing would be to appoint every enemy the Player object in the editor. The other thing is to change the tag where the Collider is on the Player.  
+Now this should work, but we have to give every enemy the PlayerObject and that is pretty bad, so let's change that.  
+We just need the Position of the Player, so we will just save the Position from the Player in his ScriptableObject and let the Enemy read it.  
+(Also we could maybe make the Speed of the enemy a bit more random to make it more interesting)  
+
+Add in the PlayerData the Player Position:
 ```C#
 public class PlayerData : ScriptableObject
 {
@@ -273,7 +292,7 @@ public class PlayerData : ScriptableObject
     public Vector3 playerPosition; // <--- Add this 
 }
 ```
-> Then we give the information in the MovementScript:
+Then we give the information in the MovementScript:
 ```C#
 public class PlayerMovement : MonoBehaviour
 {
@@ -289,7 +308,7 @@ public class PlayerMovement : MonoBehaviour
     //....
 }
 ```
-> And in the end we change the PlayerObject to PlayerData in the Enemy Script
+And in the end we change the PlayerObject to PlayerData in the Enemy Script
 ```C#
 public class EnemyBehaviour : MonoBehaviour
 {
@@ -299,14 +318,18 @@ public class EnemyBehaviour : MonoBehaviour
     private void Update()
     {
         Vector3 direction = Vector3.Normalize(playerData.playerPosition - transform.position); // <--- and there
-        //....
+        //...
     }
-    //....
+    //...
 }
 ```
-> **DON'T** forget to change the Prefabs from the Player and Enemy, so that they have the Playerdata in them. <br>
-> with the Enemy speed you can try it yourself how to make it a bit random, I would recommend to keep the speed and just add or substract a bit from it. <br>
-> **Nice Time to Commit 👁️👁️**<br>
+> [!IMPORTANT]
+> **DON'T** forget to change the Prefabs from the Player and Enemy, so that they have the Playerdata in them.   
+
+With the Enemy speed you can try it yourself how to make it a bit random, I would recommend to keep the speed and just add or substract a bit from it. 
+
+**Nice Time to Commit 👁️👁️**  
+
 ## Shooting at Enemy
 > How about we add a simple shooting mechanic. For this we do this in another Branch. <br>
 > First we will need to add a model to it. (Maybe even a sound if you'd like). <br>
